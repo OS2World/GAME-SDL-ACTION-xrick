@@ -24,6 +24,9 @@
 #include <memory.h> /* memset */
 #endif
 
+#define SCALER_MAXWIDTH 640
+#define SCALER_MAXHEIGHT 480
+
 U8 *sysvid_fb; /* frame buffer */
 rect_t SCREENRECT = {0, 0, SYSVID_WIDTH, SYSVID_HEIGHT, NULL}; /* whole fb */
 
@@ -144,12 +147,7 @@ sysvid_chkvm(void)
   else {
     IFDEBUG_VIDEO(sys_printf("xrick/video: SDL says, use these modes:\n"););
     for (i = 0; modes[i]; i++) {
-      IFDEBUG_VIDEO(sys_printf("  %dx%d\n", modes[i]->w, modes[i]->h););
-      if (modes[i]->w <= modes[mode]->w && modes[i]->w >= SYSVID_WIDTH &&
-	  modes[i]->h * SYSVID_WIDTH >= modes[i]->w * SYSVID_HEIGHT) {
-	mode = i;
-	fszoom = modes[mode]->w / SYSVID_WIDTH;
-      }
+      if (modes == NULL || (unsigned int)modes < 0x1000) continue;
     }
     if (fszoom != 0) {
       IFDEBUG_VIDEO(
